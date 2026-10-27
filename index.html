@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jesús Rosales</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fuentes de Google: JetBrains Mono (Terminal/Monoespaciada) y Newsreader (Epígrafe editorial) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #040711;
+      color: #f1f5f9;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .epigraph {
+      font-family: 'Newsreader', serif;
+    }
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* Escudo de contraste ambiental para garantizar 100% de legibilidad sobre nubes brillantes dinámicas */
+    .editorial-scrim {
+      background: radial-gradient(ellipse at bottom left, rgba(4, 7, 17, 0.72) 0%, rgba(4, 7, 17, 0.42) 65%, rgba(4, 7, 17, 0) 100%);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      mask-image: linear-gradient(to top right, black 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top right, black 60%, transparent 100%);
+    }
+
+    /* Halo de contraste nítido para el texto */
+    .pixel-contrast-text {
+      text-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        0 2px 8px rgba(3, 7, 18, 0.90),
+        0 0 16px rgba(0, 0, 0, 0.75);
+    }
+
+    .glow-hover {
+      transition: all 0.2s ease;
+    }
+    .glow-hover:hover {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+  </style>
+</head>
+<body class="relative min-h-screen w-full bg-[#040711] selection:bg-cyan-950 selection:text-cyan-200">
+
+  <!-- Lienzo de fondo interactivo estilo Pixel Art -->
+  <canvas id="pixel-canvas" class="fixed inset-0 w-full h-full z-0 cursor-crosshair"></canvas>
+
+  <!-- Viñeta sutil para profundidad atmosférica en los bordes -->
+  <div class="fixed inset-0 z-10 pointer-events-none" style="background: radial-gradient(circle at 50% 50%, rgba(4, 7, 17, 0) 45%, rgba(2, 4, 10, 0.85) 100%);"></div>
+
+  <!-- Capa de contenido (Estructura minimalista estilo Dao Ho) -->
+  <div class="relative z-20 min-h-screen flex flex-col justify-between p-6 sm:p-10 md:p-16 max-w-7xl mx-auto pointer-events-none">
+
+    <!-- Barra de navegación minimalista superior -->
+    <header class="flex items-center justify-between text-xs tracking-wider text-neutral-300 pointer-events-auto">
+      <nav class="flex items-center gap-6 sm:gap-8">
+        <a href="#espacio" class="text-white border-b border-white/80 pb-0.5 font-medium transition-colors glow-hover pixel-contrast-text">espacio</a>
+        <a href="#proyectos" class="hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text">proyectos</a>
+        <a href="#blog" class="hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text">blog</a>
+      </nav>
+
+      <div class="flex items-center gap-4 text-neutral-300">
+        <span id="ufo-counter" class="font-mono text-[11px] tabular-nums text-emerald-300 select-none pixel-contrast-text" title="OVNIs interceptados">🛸 0</span>
+        <span class="text-neutral-600 select-none">/</span>
+        <span id="star-counter" class="font-mono text-[11px] tabular-nums hover:text-cyan-300 transition-colors cursor-default select-none pixel-contrast-text" title="Estrellas fugaces lanzadas">★ 0</span>
+        <button id="cosmic-burst-btn" class="hover:text-amber-200 transition-colors text-xs select-none glow-hover pixel-contrast-text" title="Lanzar ráfaga estelar">☼</button>
+      </div>
+    </header>
+
+    <!-- Bloque tipográfico de portafolio inferior izquierdo con protección de contraste adaptativo -->
+    <main class="w-full max-w-xl pb-6 sm:pb-12 pt-28 pointer-events-auto">
+      <div class="editorial-scrim p-6 sm:p-8 -ml-6 sm:-ml-8 rounded-2xl">
+
+        <!-- Epígrafe -->
+        <div class="mb-8 text-neutral-300">
+          <p class="epigraph text-base sm:text-lg italic leading-relaxed tracking-wide select-none pixel-contrast-text text-neutral-200">
+            explorar lo desconocido,<br />
+            trazar el camino al mañana.
+          </p>
+        </div>
+
+        <!-- Sección de biografía e información -->
+        <section class="space-y-4 text-xs sm:text-[13px] leading-relaxed pixel-contrast-text">
+          <p>
+            Hola, soy <strong class="text-white font-semibold">Jesús</strong>.
+          </p>
+          <p class="text-neutral-200 font-normal">
+            Estudiante de ingeniería en software, apasionado por crear cosas y caminar hacia el futuro.
+          </p>
+          <p class="text-neutral-300 font-normal">
+            Actualmente construyendo herramientas de software, experimentando con sistemas interactivos y desarrollando proyectos de código abierto.
+          </p>
+        </section>
+
+        <!-- Pie de página: Enlace único a GitHub -->
+        <footer class="mt-8 pt-4 flex items-center text-xs text-neutral-300">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-white underline underline-offset-4 decoration-neutral-500 hover:decoration-white transition-all glow-hover pixel-contrast-text">github</a>
+        </footer>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    // --- Configuración del Lienzo (Canvas) y Píxeles ---
+    const canvas = document.getElementById('pixel-canvas');
+    const ctx = canvas.getContext('2d');
+    const starCountDisplay = document.getElementById('star-counter');
+    const ufoCountDisplay = document.getElementById('ufo-counter');
+    let starClickCount = 0;
+    let ufoDestroyCount = 0;
+
+    // Tamaño del bloque de píxel (5px brinda una apariencia retro auténtica y nítida de 16 bits)
+    const PIXEL_SIZE = 5;
+    let gridW = 0;
+    let gridH = 0;
+    let width = 0;
+    let height = 0;
+
+    // Coordenadas suaves del ratón para el efecto de paralaje
+    const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+
+    // Estrellas parpadeantes de fondo en píxeles
+    let pixelStars = [];
+
+    function initStars() {
+      pixelStars = [];
+      const numStars = Math.floor((gridW * gridH) * 0.008);
+      for (let i = 0; i < numStars; i++) {
+        pixelStars.push({
+          gx: Math.floor(Math.random() * gridW),
+          gy: Math.floor(Math.random() * (gridH * 0.75)),
+          twinkleSpeed: 0.02 + Math.random() * 0.05,
+          phase: Math.random() * Math.PI * 2,
+          brightness: Math.random() * 0.5 + 0.35,
+          colorType: Math.random() < 0.28 ? 'cyan' : (Math.random() < 0.16 ? 'amber' : 'white')
+        });
+      }
+    }
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      gridW = Math.ceil(width / PIXEL_SIZE);
+      gridH = Math.ceil(height / PIXEL_SIZE);
+      mouse.x = mouse.targetX = width / 2;
+      mouse.y = mouse.targetY = height / 2;
+      initStars();
+    }
+    window.addEventListener('resize', resize);
+
+    window.addEventListener('pointermove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+    });
+
+    // --- Vehículos Dinámicos en Píxeles (Cohetes y Naves de Exploración) ---
+    // Tipos de vehículos:
+    // 1. Cohete (orientado hacia arriba a la derecha, partículas de estela de fuego)
+    // 2. Sonda de exploración / satélite (desplazamiento orbital horizontal lento)
+    const vehicles = [];
+
+    function spawnRocket() {
+      const startGx = Math.floor(Math.random() * (gridW * 0.35));
+      const startGy = Math.floor(gridH * 0.85 + Math.random() * (gridH * 0.1));
+      const speed = 0.55 + Math.random() * 0.35;
+      const angle = -Math.PI / 4 + (Math.random() - 0.5) * 0.2; // aprox. 45 grados hacia arriba
+      vehicles.push({
+        type: 'rocket',
+        gx: startGx,
+        gy: startGy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        active: true,
+        flameTick: 0
+      });
+    }
+
+    function spawnProbe() {
+      const goingRight = Math.random() < 0.5;
+      vehicles.push({
+        type: 'probe',
+        gx: goingRight ? -15 : gridW + 15,
+        gy: Math.floor(gridH * (0.12 + Math.random() * 0.28)),
+        vx: goingRight ? (0.22 + Math.random() * 0.15) : -(0.22 + Math.random() * 0.15),
+        vy: (Math.random() - 0.5) * 0.05,
+        active: true,
+        blinkTick: 0
+      });
+    }
+
+    // Partículas de vehículos (fuego y humo)
+    const exhaustParticles = [];
+
+    // Generación periódica de naves espaciales
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && vehicles.filter(v => v.type === 'rocket').length < 2) {
+        spawnRocket();
+      }
+    }, 9000);
+
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && vehicles.filter(v => v.type === 'probe').length < 1) {
+        spawnProbe();
+      }
+    }, 14000);
+
+    // Presencia inicial de vehículos
+    setTimeout(spawnRocket, 1200);
+    setTimeout(spawnProbe, 2500);
+
+    // --- Meteoros Periódicos / Bolas de Fuego Fugaces ---
+    const meteors = [];
+
+    function spawnMeteor() {
+      const startGx = Math.floor(Math.random() * (gridW * 0.7));
+      const startGy = Math.floor(Math.random() * (gridH * 0.2));
+      const angle = 0.55 + (Math.random() - 0.5) * 0.12; // diagonal descendente
+      const speed = 3.8 + Math.random() * 2.2;
+      meteors.push({
+        gx: startGx,
+        gy: startGy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        length: Math.floor(Math.random() * 8 + 10),
+        life: 1.0,
+        decay: 0.016 + Math.random() * 0.012,
+        coreColor: Math.random() < 0.4 ? '#fde047' : '#fdba74'
+      });
+    }
+
+    // Temporizador de meteoros (cada 6-10s)
+    setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        spawnMeteor();
+      }
+    }, 7500);
+
+    // --- OVNIs Voladores Interactivos y Defensa Láser ---
+    const ufos = [];
+    const laserBeams = [];
+    const ufoExplosionDebris = [];
+
+    function spawnUfo() {
+      const fromLeft = Math.random() < 0.5;
+      const speed = 0.45 + Math.random() * 0.35;
+      ufos.push({
+        gx: fromLeft ? -12 : gridW + 12,
+        gy: Math.floor(gridH * (0.12 + Math.random() * 0.35)),
+        vx: fromLeft ? speed : -speed,
+        baseGy: 0,
+        bobPhase: Math.random() * Math.PI * 2,
+        width: 14,
+        height: 8,
+        alive: true,
+        tractorTimer: 0,
+        beamActive: false
+      });
+      ufos[ufos.length - 1].baseGy = ufos[ufos.length - 1].gy;
+    }
+
+    // Generar OVNI cada 7 a 11 segundos si hay menos de 2 activos
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && ufos.filter(u => u.alive).length < 2) {
+        spawnUfo();
+      }
+    }, 8500);
+
+    // Aparición inicial del OVNI tras 2.5s
+    setTimeout(spawnUfo, 2500);
+
+    // Renderizador de sprite del OVNI (Platillo volador alienígena retro con cúpula de cristal y luces pulsantes)
+    function drawPixelUFO(u, time) {
+      const px = Math.floor(u.gx);
+      const py = Math.floor(u.gy);
+      const lightPhase = Math.floor(time * 8) % 3;
+
+      // 1. Rayo tractor de abducción (haz de escaneo periódico en píxeles)
+      if (u.beamActive) {
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.16)';
+        for (let by = 0; by < 18; by++) {
+          const spread = Math.floor(by * 0.7);
+          ctx.fillRect((px - spread) * PIXEL_SIZE, (py + 4 + by) * PIXEL_SIZE, (spread * 2 + 1) * PIXEL_SIZE, PIXEL_SIZE);
+        }
+      }
+
+      // 2. Cúpula de cabina de cristal (Tono esmeralda / cian neón)
+      ctx.fillStyle = '#6ee7b7';
+      ctx.fillRect((px - 2) * PIXEL_SIZE, (py - 3) * PIXEL_SIZE, 5 * PIXEL_SIZE, PIXEL_SIZE);
+      ctx.fillStyle = '#a7f3d0';
+      ctx.fillRect((px - 3) * PIXEL_SIZE, (py - 2) * PIXEL_SIZE, 7 * PIXEL_SIZE, 2 * PIXEL_SIZE);
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(px * PIXEL_SIZE, (py - 2) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE); // silueta alienígena en el interior
+
+      // 3. Casco del platillo (Plata pizarra metálica)
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect((px - 6) * PIXEL_SIZE, py * PIXEL_SIZE, 13 * PIXEL_SIZE, 2 * PIXEL_SIZE);
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect((px - 5) * PIXEL_SIZE, (py + 2) * PIXEL_SIZE, 11 * PIXEL_SIZE, PIXEL_SIZE);
+      ctx.fillStyle = '#475569';
+      ctx.fillRect((px - 3) * PIXEL_SIZE, (py + 3) * PIXEL_SIZE, 7 * PIXEL_SIZE, PIXEL_SIZE);
+
+      // 4. Luces estroboscópicas de advertencia pulsantes en la parte inferior
+      const strobe1 = (lightPhase === 0) ? '#f43f5e' : '#f59e0b';
+      const strobe2 = (lightPhase === 1) ? '#38bdf8' : '#10b981';
+      const strobe3 = (lightPhase === 2) ? '#f43f5e' : '#f59e0b';
+
+      ctx.fillStyle = strobe1;
+      ctx.fillRect((px - 4) * PIXEL_SIZE, (py + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+      ctx.fillStyle = strobe2;
+      ctx.fillRect(px * PIXEL_SIZE, (py + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+      ctx.fillStyle = strobe3;
+      ctx.fillRect((px + 4) * PIXEL_SIZE, (py + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+    }
+
+    // Hacer explotar el OVNI al recibir un impacto
+    function explodeUfo(u, hitX, hitY) {
+      u.alive = false;
+      ufoDestroyCount++;
+      ufoCountDisplay.textContent = `🛸 ${ufoDestroyCount}`;
+
+      // Efecto visual de disparo láser desde la parte inferior de la pantalla hacia el objetivo
+      laserBeams.push({
+        x1: hitX,
+        y1: height,
+        x2: hitX,
+        y2: hitY,
+        alpha: 1.0,
+        color: '#10b981',
+        coreColor: '#ecfdf5'
+      });
+
+      // Dispersar restos de píxeles y ondas de choque energéticas
+      const colors = ['#34d399', '#6ee7b7', '#f43f5e', '#fbbf24', '#e2e8f0', '#94a3b8'];
+      for (let i = 0; i < 28; i++) {
+        const speed = Math.random() * 3.2 + 0.8;
+        const angle = Math.random() * Math.PI * 2;
+        ufoExplosionDebris.push({
+          gx: u.gx + (Math.random() - 0.5) * 4,
+          gy: u.gy + (Math.random() - 0.5) * 4,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 1.0,
+          decay: 0.025 + Math.random() * 0.035,
+          size: Math.random() < 0.3 ? 2 : 1
+        });
+      }
+
+      // Anillo extra de onda expansiva / explosión
+      pixelBursts.push({
+        gx: Math.floor(u.gx),
+        gy: Math.floor(u.gy),
+        radius: 1,
+        maxRadius: 14,
+        alpha: 1.0,
+        decay: 0.055
+      });
+    }
+
+    // --- Estrellas Fugaces Escalonadas Interactivas y Ráfagas al Hacer Clic ---
+    const shootingStars = [];
+    const pixelBursts = [];
+
+    function triggerShootingStar(startX, startY) {
+      const angle = 0.42 + (Math.random() - 0.5) * 0.18;
+      const speed = Math.random() * 3 + 4.5;
+      shootingStars.push({
+        gx: startX / PIXEL_SIZE,
+        gy: startY / PIXEL_SIZE,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        length: Math.floor(Math.random() * 7 + 9),
+        life: 1.0,
+        decay: 0.024,
+        isGolden: Math.random() < 0.38
+      });
+
+      pixelBursts.push({
+        gx: Math.floor(startX / PIXEL_SIZE),
+        gy: Math.floor(startY / PIXEL_SIZE),
+        radius: 1,
+        maxRadius: Math.floor(Math.random() * 9 + 8),
+        alpha: 1.0,
+        decay: 0.045
+      });
+
+      starClickCount++;
+      starCountDisplay.textContent = `★ ${starClickCount}`;
+    }
+
+    window.addEventListener('pointerdown', (e) => {
+      if (e.target.tagName && (e.target.tagName.toLowerCase() === 'a' || e.target.tagName.toLowerCase() === 'button')) return;
+
+      const clickGx = e.clientX / PIXEL_SIZE;
+      const clickGy = e.clientY / PIXEL_SIZE;
+
+      // Comprobar si el usuario hizo clic directamente sobre algún OVNI activo
+      let hitUfo = false;
+      for (let i = ufos.length - 1; i >= 0; i--) {
+        const u = ufos[i];
+        if (u.alive) {
+          const hitRadius = 8; // tolerancia amplia para el clic
+          if (Math.abs(clickGx - u.gx) <= hitRadius && Math.abs(clickGy - u.gy) <= hitRadius) {
+            explodeUfo(u, e.clientX, e.clientY);
+            hitUfo = true;
+            break;
+          }
+        }
+      }
+
+      // Si se hizo clic en espacio vacío, lanzar estrella fugaz común y explosión
+      if (!hitUfo) {
+        triggerShootingStar(e.clientX, e.clientY);
+      }
+    });
+
+    document.getElementById('cosmic-burst-btn').addEventListener('click', () => {
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          triggerShootingStar(width * (0.2 + i * 0.25), 60 + Math.random() * 120);
+        }, i * 150);
+      }
+    });
+
+    // --- Altura Volumétrica de Nubes y Cálculo del Rayo de Luz Cian ---
+    function evaluateSkyGrid(gx, gy, time, pX) {
+      const nx = gx / gridW;
+      const ny = gy / gridH;
+
+      const wave1 = Math.sin(nx * 4.4 + time * 0.35 + pX * 0.08) * 0.14;
+      const wave2 = Math.sin(nx * 8.8 - time * 0.22) * 0.07;
+      const wave3 = Math.cos(nx * 14.2 + time * 0.45) * 0.035;
+      const wave4 = Math.sin(nx * 2.1 + ny * 2.8 + time * 0.15) * 0.05;
+
+      const cloudBaseline = 0.62 + wave1 + wave2 + wave3 + wave4;
+      const distFromRim = ny - cloudBaseline;
+
+      // Rayo de luz cian diagonal
+      const beamSlope = -0.52;
+      const beamCenter = 0.48 + pX * 0.06;
+      const distToBeam = Math.abs((ny - 0.22) - beamSlope * (nx - beamCenter));
+      const beamIntensity = Math.max(0, 1 - distToBeam * 4.5);
+
+      return { distFromRim, beamIntensity, nx, ny };
+    }
+
+    // Matriz de tramado (Dither) Bayer 4x4 para transiciones de sombreado retro
+    const BAYER_4X4 = [
+      [ 0,  8,  2, 10],
+      [12,  4, 14,  6],
+      [ 3, 11,  1,  9],
+      [15,  7, 13,  5]
+    ];
+
+    // --- Renderizado de Cuerpos Celestes en Pixel Art ---
+    // 1. Gigante Gaseoso con Anillos (Saturno)
+    function drawPixelSaturn(centerX, centerY, pX, pY) {
+      const cx = Math.floor(centerX + pX * 8);
+      const cy = Math.floor(centerY + pY * 6);
+      const r = 18; // unidades de cuadrícula
+
+      // Capa trasera de los anillos exteriores
+      for (let ry = -7; ry <= 7; ry++) {
+        for (let rx = -34; rx <= 34; rx++) {
+          const transformedY = ry - rx * 0.24; // inclinación
+          const distOuter = (rx * rx) / (34 * 34) + (transformedY * transformedY) / (8 * 8);
+          const distInner = (rx * rx) / (22 * 22) + (transformedY * transformedY) / (5.2 * 5.2);
+          
+          if (distOuter <= 1 && distInner >= 1 && transformedY < 0) { // parte posterior del planeta
+            const shade = Math.abs(rx) > 26 ? '#78350f' : (Math.abs(rx) > 15 ? '#b45309' : '#d97706');
+            ctx.fillStyle = shade;
+            ctx.fillRect((cx + rx) * PIXEL_SIZE, (cy + ry) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          }
+        }
+      }
+
+      // Esfera del planeta con bandas atmosféricas
+      for (let dy = -r; dy <= r; dy++) {
+        const dxLimit = Math.floor(Math.sqrt(r * r - dy * dy));
+        for (let dx = -dxLimit; dx <= dxLimit; dx++) {
+          const normY = dy / r;
+          let planetColor;
+
+          // Bandas horizontales de nubes
+          if (normY < -0.6) {
+            planetColor = '#451a03'; // Oscuro polar
+          } else if (normY < -0.3) {
+            planetColor = '#9a3412'; // Banda oxidada
+          } else if (normY < 0.05) {
+            planetColor = '#d97706'; // Ecuador ámbar dorado
+          } else if (normY < 0.45) {
+            planetColor = '#f59e0b'; // Amarillo dorado claro
+          } else if (normY < 0.75) {
+            planetColor = '#b45309'; // Templado inferior
+          } else {
+            planetColor = '#78350f'; // Polo sur
+          }
+
+          // Sombreado en el terminador izquierdo
+          if (dx < -dxLimit * 0.35) {
+            planetColor = '#1f0d05';
+          } else if (dx < -dxLimit * 0.1) {
+            planetColor = '#451a03';
+          }
+
+          ctx.fillStyle = planetColor;
+          ctx.fillRect((cx + dx) * PIXEL_SIZE, (cy + dy) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        }
+      }
+
+      // Capa frontal de los anillos exteriores
+      for (let ry = -7; ry <= 7; ry++) {
+        for (let rx = -34; rx <= 34; rx++) {
+          const transformedY = ry - rx * 0.24;
+          const distOuter = (rx * rx) / (34 * 34) + (transformedY * transformedY) / (8 * 8);
+          const distInner = (rx * rx) / (22 * 22) + (transformedY * transformedY) / (5.2 * 5.2);
+          
+          if (distOuter <= 1 && distInner >= 1 && transformedY >= 0) { // parte frontal del planeta
+            const ringShade = Math.abs(rx) > 26 ? '#92400e' : (Math.abs(rx) > 14 ? '#d97706' : '#fcd34d');
+            ctx.fillStyle = ringShade;
+            ctx.fillRect((cx + rx) * PIXEL_SIZE, (cy + ry) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          }
+        }
+      }
+    }
+
+    // 2. Luna con Cráteres
+    function drawPixelMoon(centerX, centerY, pX, pY) {
+      const cx = Math.floor(centerX + pX * 4);
+      const cy = Math.floor(centerY + pY * 3);
+      const r = 6;
+
+      for (let dy = -r; dy <= r; dy++) {
+        const dxLimit = Math.floor(Math.sqrt(r * r - dy * dy));
+        for (let dx = -dxLimit; dx <= dxLimit; dx++) {
+          let moonColor = '#94a3b8'; // Plata pizarra
+
+          // Cráteres de la superficie y terminador en sombra
+          if (dx < -1) {
+            moonColor = '#475569'; // Sombra
+          } else if (dx === 1 && dy === -1) {
+            moonColor = '#334155'; // Cráter 1
+          } else if (dx === 2 && dy === 2) {
+            moonColor = '#334155'; // Cráter 2
+          } else if (dx > 2) {
+            moonColor = '#cbd5e1'; // Borde iluminado por el sol
+          }
+
+          ctx.fillStyle = moonColor;
+          ctx.fillRect((cx + dx) * PIXEL_SIZE, (cy + dy) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        }
+      }
+    }
+
+    // --- Mapas de Bits y Renderizadores de Naves Espaciales ---
+    // Cohete Retro Clásico: matriz de 7x11 celdas
+    const ROCKET_SPRITE = [
+      "   W   ",
+      "  WWW  ",
+      "  WRW  ",
+      "  WRW  ",
+      " WWCWW ",
+      " WWCWW ",
+      " WWWWW ",
+      "WW W WW",
+      "RR   RR",
+      "RR   RR",
+      "F     F"
+    ];
+
+    function drawPixelRocket(r) {
+      const px = Math.floor(r.gx);
+      const py = Math.floor(r.gy);
+      r.flameTick = (r.flameTick + 1) % 12;
+
+      // Dibujar sprite
+      for (let sy = 0; sy < ROCKET_SPRITE.length; sy++) {
+        const row = ROCKET_SPRITE[sy];
+        for (let sx = 0; sx < row.length; sx++) {
+          const char = row[sx];
+          let color = null;
+          if (char === 'W') color = '#e2e8f0'; // Chasis blanco
+          else if (char === 'R') color = '#dc2626'; // Alerones y morro rojos
+          else if (char === 'C') color = '#38bdf8'; // Ventana de cabina cian
+          else if (char === 'F') color = '#991b1b'; // Soporte del motor
+
+          if (color) {
+            ctx.fillStyle = color;
+            ctx.fillRect((px + sx - 3) * PIXEL_SIZE, (py + sy - 5) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          }
+        }
+      }
+
+      // Escape de propulsor animado con parpadeo de píxeles
+      const flameLength = (r.flameTick % 3 === 0) ? 5 : (r.flameTick % 2 === 0 ? 4 : 3);
+      for (let fl = 0; fl < flameLength; fl++) {
+        const fColor = fl < 2 ? '#fef08a' : (fl < 4 ? '#f97316' : '#ef4444');
+        ctx.fillStyle = fColor;
+        ctx.fillRect((px - 1) * PIXEL_SIZE, (py + 6 + fl) * PIXEL_SIZE, 3 * PIXEL_SIZE, PIXEL_SIZE);
+      }
+
+      // Generar partículas de escape a la deriva
+      if (Math.random() < 0.6) {
+        exhaustParticles.push({
+          gx: px + (Math.random() - 0.5) * 2,
+          gy: py + 7 + flameLength,
+          vx: -r.vx * 0.25 + (Math.random() - 0.5) * 0.3,
+          vy: -r.vy * 0.25 + Math.random() * 0.4,
+          life: 1.0,
+          decay: 0.04 + Math.random() * 0.03,
+          color: Math.random() < 0.5 ? '#f97316' : '#64748b'
+        });
+      }
+    }
+
+    // Sonda de exploración de espacio profundo con paneles solares y antena
+    function drawPixelProbe(p) {
+      const px = Math.floor(p.gx);
+      const py = Math.floor(p.gy);
+      p.blinkTick = (p.blinkTick + 1) % 60;
+
+      // Núcleo principal
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect((px - 2) * PIXEL_SIZE, (py - 2) * PIXEL_SIZE, 5 * PIXEL_SIZE, 5 * PIXEL_SIZE);
+
+      // Detalle de la computadora central
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect((px - 1) * PIXEL_SIZE, (py - 1) * PIXEL_SIZE, 3 * PIXEL_SIZE, 3 * PIXEL_SIZE);
+
+      // Panel solar izquierdo
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fillRect((px - 9) * PIXEL_SIZE, (py - 3) * PIXEL_SIZE, 6 * PIXEL_SIZE, 7 * PIXEL_SIZE);
+      ctx.fillStyle = '#60a5fa';
+      ctx.fillRect((px - 8) * PIXEL_SIZE, (py - 2) * PIXEL_SIZE, 4 * PIXEL_SIZE, 5 * PIXEL_SIZE);
+
+      // Panel solar derecho
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fillRect((px + 4) * PIXEL_SIZE, (py - 3) * PIXEL_SIZE, 6 * PIXEL_SIZE, 7 * PIXEL_SIZE);
+      ctx.fillStyle = '#60a5fa';
+      ctx.fillRect((px + 5) * PIXEL_SIZE, (py - 2) * PIXEL_SIZE, 4 * PIXEL_SIZE, 5 * PIXEL_SIZE);
+
+      // Baliza de antena
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(px * PIXEL_SIZE, (py - 5) * PIXEL_SIZE, PIXEL_SIZE, 3 * PIXEL_SIZE);
+
+      // Luz estroboscópica de la baliza
+      const beaconColor = p.blinkTick < 10 ? '#ef4444' : '#7f1d1d';
+      ctx.fillStyle = beaconColor;
+      ctx.fillRect(px * PIXEL_SIZE, (py - 6) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+    }
+
+    // --- Bucle Principal de Renderizado ---
+    let frame = 0;
+
+    function render() {
+      frame++;
+      const time = frame * 0.016;
+
+      // Interpolación (Lerp) de paralaje del ratón
+      mouse.x += (mouse.targetX - mouse.x) * 0.05;
+      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+      const pX = (mouse.x - width / 2) / width;
+      const pY = (mouse.y - height / 2) / height;
+
+      // 1. Limpiar espacio profundo
+      ctx.fillStyle = '#040711';
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Dibujar estrellas titilantes
+      for (let i = 0; i < pixelStars.length; i++) {
+        const s = pixelStars[i];
+        const currentAlpha = Math.max(0.18, Math.min(0.98, s.brightness + Math.sin(time * 3 + s.phase) * 0.38));
+        
+        let starColor;
+        if (s.colorType === 'cyan') starColor = `rgba(125, 211, 252, ${currentAlpha})`;
+        else if (s.colorType === 'amber') starColor = `rgba(254, 240, 138, ${currentAlpha})`;
+        else starColor = `rgba(241, 245, 249, ${currentAlpha})`;
+
+        ctx.fillStyle = starColor;
+        ctx.fillRect(s.gx * PIXEL_SIZE, s.gy * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+      }
+
+      // 3. Dibujar cuerpos celestes (cuadrante superior derecho)
+      const saturnGx = gridW * 0.82;
+      const saturnGy = gridH * 0.22;
+      drawPixelSaturn(saturnGx, saturnGy, pX, pY);
+
+      const moonGx = gridW * 0.68;
+      const moonGy = gridH * 0.14;
+      drawPixelMoon(moonGx, moonGy, pX, pY);
+
+      // 4. Malla volumétrica de nubes y rayo de luz cian
+      for (let gy = 0; gy < gridH; gy++) {
+        for (let gx = 0; gx < gridW; gx++) {
+          const { distFromRim, beamIntensity } = evaluateSkyGrid(gx, gy, time, pX);
+          const dither = BAYER_4X4[gy % 4][gx % 4] / 16;
+
+          let pixelColor = null;
+
+          // Espacio superior con rayos de luz cian
+          if (distFromRim < -0.04) {
+            if (beamIntensity > 0.12) {
+              const ditheredIntensity = beamIntensity + (dither - 0.5) * 0.35;
+              if (ditheredIntensity > 0.72) pixelColor = '#7dd3fc';
+              else if (ditheredIntensity > 0.45) pixelColor = '#38bdf8';
+              else if (ditheredIntensity > 0.22) pixelColor = '#0284c7';
+              else pixelColor = '#0c4a6e';
+            }
+          }
+          // Borde brillante de las nubes (Terracota / Ámbar / Dorado / Amarillo suave)
+          else if (distFromRim >= -0.04 && distFromRim <= 0.07) {
+            const rimNorm = (distFromRim + 0.04) / 0.11;
+            const threshold = rimNorm + (dither - 0.5) * 0.25;
+
+            if (threshold < 0.25) pixelColor = '#fef08a';
+            else if (threshold < 0.50) pixelColor = '#fde047';
+            else if (threshold < 0.75) pixelColor = '#fb923c';
+            else pixelColor = '#ea580c';
+          }
+          // Cuerpo denso de la nube (Azul marino profundo tramado y pizarra)
+          else {
+            const depth = Math.min(1, (distFromRim - 0.07) / 0.38);
+            const bodyThreshold = depth + (dither - 0.5) * 0.28;
+
+            if (beamIntensity > 0.4) {
+              pixelColor = bodyThreshold < 0.4 ? '#0369a1' : '#0a1124';
+            } else {
+              if (bodyThreshold < 0.20) pixelColor = '#7c2d12';
+              else if (bodyThreshold < 0.42) pixelColor = '#334155';
+              else if (bodyThreshold < 0.70) pixelColor = '#1e293b';
+              else pixelColor = '#0a1124';
+            }
+          }
+
+          if (pixelColor) {
+            ctx.fillStyle = pixelColor;
+            ctx.fillRect(gx * PIXEL_SIZE, gy * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          }
+        }
+      }
+
+      // 5. Actualizar y renderizar OVNIs
+      for (let i = ufos.length - 1; i >= 0; i--) {
+        const u = ufos[i];
+        if (!u.alive) {
+          ufos.splice(i, 1);
+          continue;
+        }
+
+        // Desplazamiento horizontal y suave levitación senoidal vertical
+        u.gx += u.vx;
+        u.gy = u.baseGy + Math.sin(time * 3 + u.bobPhase) * 2.5;
+
+        // Alternar periódicamente el haz de escaneo
+        u.tractorTimer += 0.016;
+        if (u.tractorTimer > 4.0) {
+          u.beamActive = !u.beamActive;
+          u.tractorTimer = 0;
+        }
+
+        drawPixelUFO(u, time);
+
+        // Eliminar al salir de la pantalla
+        if (u.vx > 0 && u.gx > gridW + 25) ufos.splice(i, 1);
+        else if (u.vx < 0 && u.gx < -25) ufos.splice(i, 1);
+      }
+
+      // 6. Rayos láser de la torreta de defensa
+      for (let i = laserBeams.length - 1; i >= 0; i--) {
+        const beam = laserBeams[i];
+        ctx.save();
+        ctx.strokeStyle = beam.color;
+        ctx.lineWidth = 4;
+        ctx.globalAlpha = beam.alpha;
+        ctx.beginPath();
+        ctx.moveTo(beam.x1, beam.y1);
+        ctx.lineTo(beam.x2, beam.y2);
+        ctx.stroke();
+
+        // Línea central verde-blanca brillante
+        ctx.strokeStyle = beam.coreColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(beam.x1, beam.y1);
+        ctx.lineTo(beam.x2, beam.y2);
+        ctx.stroke();
+        ctx.restore();
+
+        beam.alpha -= 0.12;
+        if (beam.alpha <= 0) laserBeams.splice(i, 1);
+      }
+
+      // 7. Restos y escombros de la explosión del OVNI
+      for (let i = ufoExplosionDebris.length - 1; i >= 0; i--) {
+        const d = ufoExplosionDebris[i];
+        d.gx += d.vx;
+        d.gy += d.vy;
+        d.vy += 0.04; // ligera atracción gravitatoria sobre los escombros
+        d.life -= d.decay;
+
+        if (d.life <= 0) {
+          ufoExplosionDebris.splice(i, 1);
+          continue;
+        }
+
+        ctx.fillStyle = d.color;
+        ctx.globalAlpha = d.life;
+        const sz = d.size * PIXEL_SIZE;
+        ctx.fillRect(Math.floor(d.gx) * PIXEL_SIZE, Math.floor(d.gy) * PIXEL_SIZE, sz, sz);
+        ctx.globalAlpha = 1.0;
+      }
+
+      // 8. Actualizar y renderizar vehículos (cohetes y sondas)
+      for (let i = vehicles.length - 1; i >= 0; i--) {
+        const v = vehicles[i];
+        v.gx += v.vx;
+        v.gy += v.vy;
+
+        if (v.type === 'rocket') {
+          drawPixelRocket(v);
+          if (v.gx > gridW + 20 || v.gy < -30) vehicles.splice(i, 1);
+        } else if (v.type === 'probe') {
+          drawPixelProbe(v);
+          if (v.gx < -30 || v.gx > gridW + 30) vehicles.splice(i, 1);
+        }
+      }
+
+      // 9. Partículas de escape y humo
+      for (let i = exhaustParticles.length - 1; i >= 0; i--) {
+        const p = exhaustParticles[i];
+        p.gx += p.vx;
+        p.gy += p.vy;
+        p.life -= p.decay;
+
+        if (p.life <= 0) {
+          exhaustParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life * 0.75;
+        ctx.fillRect(Math.floor(p.gx) * PIXEL_SIZE, Math.floor(p.gy) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        ctx.globalAlpha = 1.0;
+      }
+
+      // 10. Meteoros periódicos descendentes (colas de fuego)
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.gx += m.vx;
+        m.gy += m.vy;
+        m.life -= m.decay;
+
+        if (m.life <= 0 || m.gx > gridW + 10 || m.gy > gridH + 10) {
+          meteors.splice(i, 1);
+          continue;
+        }
+
+        const len = m.length;
+        const meteorPalette = ['#ffffff', m.coreColor, '#ea580c', '#991b1b', '#334155'];
+
+        for (let seg = 0; seg < len; seg++) {
+          const frac = seg / len;
+          const px = Math.floor(m.gx - m.vx * (seg * 0.42));
+          const py = Math.floor(m.gy - m.vy * (seg * 0.42));
+
+          const colIdx = Math.min(meteorPalette.length - 1, Math.floor(frac * meteorPalette.length));
+          ctx.fillStyle = meteorPalette[colIdx];
+          ctx.fillRect(px * PIXEL_SIZE, py * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        }
+
+        // Humareda del meteoro
+        if (Math.random() < 0.45) {
+          exhaustParticles.push({
+            gx: m.gx - m.vx * 2,
+            gy: m.gy - m.vy * 2,
+            vx: (Math.random() - 0.5) * 0.2,
+            vy: (Math.random() - 0.5) * 0.2,
+            life: 0.6,
+            decay: 0.05,
+            color: '#64748b'
+          });
+        }
+      }
+
+      // 11. Explosiones de píxeles al hacer clic
+      for (let i = pixelBursts.length - 1; i >= 0; i--) {
+        const b = pixelBursts[i];
+        b.radius += 0.85;
+        b.alpha -= b.decay;
+
+        if (b.alpha <= 0 || b.radius > b.maxRadius) {
+          pixelBursts.splice(i, 1);
+          continue;
+        }
+
+        const r = Math.floor(b.radius);
+        ctx.fillStyle = `rgba(125, 211, 252, ${b.alpha * 0.85})`;
+
+        for (let dx = -r; dx <= r; dx++) {
+          const dy = r - Math.abs(dx);
+          ctx.fillRect((b.gx + dx) * PIXEL_SIZE, (b.gy + dy) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          if (dy !== 0) {
+            ctx.fillRect((b.gx + dx) * PIXEL_SIZE, (b.gy - dy) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+          }
+        }
+      }
+
+      // 12. Estrellas fugaces escalonadas interactivas
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        ss.gx += ss.vx;
+        ss.gy += ss.vy;
+        ss.life -= ss.decay;
+
+        if (ss.life <= 0 || ss.gx > gridW + 10 || ss.gy > gridH + 10) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        const len = ss.length;
+        const colorPalette = ss.isGolden
+          ? ['#ffffff', '#fef08a', '#fb923c', '#c2410c']
+          : ['#ffffff', '#7dd3fc', '#0ea5e9', '#0369a1'];
+
+        for (let seg = 0; seg < len; seg++) {
+          const frac = seg / len;
+          const px = Math.floor(ss.gx - ss.vx * (seg * 0.45));
+          const py = Math.floor(ss.gy - ss.vy * (seg * 0.45));
+
+          const colIdx = Math.min(colorPalette.length - 1, Math.floor(frac * colorPalette.length));
+          ctx.fillStyle = colorPalette[colIdx];
+          ctx.fillRect(px * PIXEL_SIZE, py * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    // Inicializar diseño y animación
+    resize();
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
