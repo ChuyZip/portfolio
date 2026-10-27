@@ -350,21 +350,31 @@
       ctx.fillRect((px + 4) * PIXEL_SIZE, (py + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
     }
 
-    // Hacer explotar el OVNI al recibir un impacto
+    // Hacer explotar el OVNI al recibir un impacto de proyectil
     function explodeUfo(u, hitX, hitY) {
+      if (!u.alive) return;
       u.alive = false;
       ufoDestroyCount++;
       ufoCountDisplay.textContent = `🛸 ${ufoDestroyCount}`;
 
-      // Efecto visual de disparo láser desde la parte inferior de la pantalla hacia el objetivo
+      // Efecto visual de impacto energético y destello del proyectil
       laserBeams.push({
-        x1: hitX,
-        y1: height,
-        x2: hitX,
+        x1: hitX - 16,
+        y1: hitY,
+        x2: hitX + 16,
         y2: hitY,
         alpha: 1.0,
-        color: '#10b981',
-        coreColor: '#ecfdf5'
+        color: '#34d399',
+        coreColor: '#ffffff'
+      });
+      laserBeams.push({
+        x1: hitX,
+        y1: hitY - 16,
+        x2: hitX,
+        y2: hitY + 16,
+        alpha: 1.0,
+        color: '#34d399',
+        coreColor: '#ffffff'
       });
 
       // Dispersar restos de píxeles y ondas de choque energéticas
@@ -432,23 +442,19 @@
       const clickGx = e.clientX / PIXEL_SIZE;
       const clickGy = e.clientY / PIXEL_SIZE;
 
-      // Comprobar si el usuario hizo clic directamente sobre algún OVNI activo
-      let hitUfo = false;
+      // Siempre disparar el proyectil y ráfaga al hacer clic
+      triggerShootingStar(e.clientX, e.clientY);
+
+      // Si el clic impactó directamente sobre algún OVNI activo, romperlo inmediatamente
       for (let i = ufos.length - 1; i >= 0; i--) {
         const u = ufos[i];
         if (u.alive) {
-          const hitRadius = 8; // tolerancia amplia para el clic
+          const hitRadius = 10; // tolerancia amplia para impacto directo
           if (Math.abs(clickGx - u.gx) <= hitRadius && Math.abs(clickGy - u.gy) <= hitRadius) {
             explodeUfo(u, e.clientX, e.clientY);
-            hitUfo = true;
             break;
           }
         }
-      }
-
-      // Si se hizo clic en espacio vacío, lanzar estrella fugaz común y explosión
-      if (!hitUfo) {
-        triggerShootingStar(e.clientX, e.clientY);
       }
     });
 
@@ -943,14 +949,35 @@
         }
       }
 
-      // 12. Estrellas fugaces escalonadas interactivas
+      // 12. Estrellas fugaces / proyectiles interactivos
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
+        const prevGx = ss.gx;
+        const prevGy = ss.gy;
         ss.gx += ss.vx;
         ss.gy += ss.vy;
         ss.life -= ss.decay;
 
-        if (ss.life <= 0 || ss.gx > gridW + 10 || ss.gy > gridH + 10) {
+        // Detección de impacto en vuelo: el proyectil rompe directamente cualquier nave alienígena
+        let projectileHit = false;
+        for (let j = ufos.length - 1; j >= 0; j--) {
+          const u = ufos[j];
+          if (u.alive) {
+            // Verificar colisión continua a lo largo del paso del proyectil
+            for (let step = 0; step <= 3; step++) {
+              const testGx = prevGx + (ss.gx - prevGx) * (step / 3);
+              const testGy = prevGy + (ss.gy - prevGy) * (step / 3);
+              if (Math.abs(testGx - u.gx) <= 8 && Math.abs(testGy - u.gy) <= 5) {
+                explodeUfo(u, u.gx * PIXEL_SIZE, u.gy * PIXEL_SIZE);
+                projectileHit = true;
+                break;
+              }
+            }
+            if (projectileHit) break;
+          }
+        }
+
+        if (projectileHit || ss.life <= 0 || ss.gx > gridW + 10 || ss.gy > gridH + 10) {
           shootingStars.splice(i, 1);
           continue;
         }
