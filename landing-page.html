@@ -73,9 +73,9 @@
     <!-- Barra de navegación minimalista superior -->
     <header class="flex items-center justify-between text-xs tracking-wider text-neutral-300 pointer-events-auto">
       <nav class="flex items-center gap-6 sm:gap-8">
-        <a href="#espacio" class="text-white border-b border-white/80 pb-0.5 font-medium transition-colors glow-hover pixel-contrast-text">espacio</a>
-        <a href="#proyectos" class="hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text">proyectos</a>
-        <a href="#blog" class="hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text">blog</a>
+        <a href="#espacio" data-tab="espacio" class="text-white border-b border-white/80 pb-0.5 font-medium transition-colors glow-hover pixel-contrast-text cursor-pointer">espacio</a>
+        <a href="#proyectos" data-tab="proyectos" class="text-neutral-400 hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text cursor-pointer">proyectos</a>
+        <a href="#blog" data-tab="blog" class="text-neutral-400 hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text cursor-pointer">blog</a>
       </nav>
 
       <div class="flex items-center gap-4 text-neutral-300">
@@ -90,26 +90,43 @@
     <main class="w-full max-w-xl pb-6 sm:pb-12 pt-28 pointer-events-auto">
       <div class="editorial-scrim p-6 sm:p-8 -ml-6 sm:-ml-8 rounded-2xl">
 
-        <!-- Epígrafe -->
-        <div class="mb-8 text-neutral-300">
-          <p class="epigraph text-base sm:text-lg italic leading-relaxed tracking-wide select-none pixel-contrast-text text-neutral-200">
-            explorar lo desconocido,<br />
-            trazar el camino al mañana.
+        <!-- Pestaña: Espacio (Biografía principal) -->
+        <div id="tab-content-espacio" class="space-y-8">
+          <!-- Epígrafe -->
+          <div class="text-neutral-300">
+            <p class="epigraph text-base sm:text-lg italic leading-relaxed tracking-wide select-none pixel-contrast-text text-neutral-200">
+              explorar lo desconocido,<br />
+              trazar el camino al mañana.
+            </p>
+          </div>
+
+          <!-- Sección de biografía e información -->
+          <section class="space-y-4 text-xs sm:text-[13px] leading-relaxed pixel-contrast-text">
+            <p>
+              Hola, soy <strong class="text-white font-semibold">Jesús</strong>.
+            </p>
+            <p class="text-neutral-200 font-normal">
+              Estudiante de ingeniería en software, apasionado por crear cosas y caminar hacia el futuro.
+            </p>
+            <p class="text-neutral-300 font-normal">
+              Actualmente construyendo herramientas de software, experimentando con sistemas interactivos y desarrollando proyectos de código abierto.
+            </p>
+          </section>
+        </div>
+
+        <!-- Pestaña: Proyectos -->
+        <div id="tab-content-proyectos" class="hidden py-6 space-y-4">
+          <p class="text-neutral-300 text-xs sm:text-[13px] leading-relaxed font-mono pixel-contrast-text">
+            proximamente...
           </p>
         </div>
 
-        <!-- Sección de biografía e información -->
-        <section class="space-y-4 text-xs sm:text-[13px] leading-relaxed pixel-contrast-text">
-          <p>
-            Hola, soy <strong class="text-white font-semibold">Jesús</strong>.
+        <!-- Pestaña: Blog -->
+        <div id="tab-content-blog" class="hidden py-6 space-y-4">
+          <p class="text-neutral-300 text-xs sm:text-[13px] leading-relaxed font-mono pixel-contrast-text">
+            proximamente...
           </p>
-          <p class="text-neutral-200 font-normal">
-            Estudiante de ingeniería en software, apasionado por crear cosas y caminar hacia el futuro.
-          </p>
-          <p class="text-neutral-300 font-normal">
-            Actualmente construyendo herramientas de software, experimentando con sistemas interactivos y desarrollando proyectos de código abierto.
-          </p>
-        </section>
+        </div>
 
         <!-- Pie de página: Enlace único a GitHub -->
         <footer class="mt-8 pt-4 flex items-center text-xs text-neutral-300">
@@ -410,7 +427,7 @@
     }
 
     window.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName && (e.target.tagName.toLowerCase() === 'a' || e.target.tagName.toLowerCase() === 'button')) return;
+      if (e.target.closest && e.target.closest('a, button')) return;
 
       const clickGx = e.clientX / PIXEL_SIZE;
       const clickGy = e.clientY / PIXEL_SIZE;
@@ -960,6 +977,65 @@
     // Inicializar diseño y animación
     resize();
     requestAnimationFrame(render);
+
+    // --- Control de navegación entre pestañas (espacio, proyectos, blog) ---
+    const navTabs = document.querySelectorAll('[data-tab]');
+    const tabContents = {
+      espacio: document.getElementById('tab-content-espacio'),
+      proyectos: document.getElementById('tab-content-proyectos'),
+      blog: document.getElementById('tab-content-blog')
+    };
+
+    function setActiveTab(targetTab) {
+      if (!tabContents[targetTab]) return;
+
+      navTabs.forEach(tab => {
+        const isCurrent = tab.getAttribute('data-tab') === targetTab;
+        if (isCurrent) {
+          tab.className = 'text-white border-b border-white/80 pb-0.5 font-medium transition-colors glow-hover pixel-contrast-text cursor-pointer';
+        } else {
+          tab.className = 'text-neutral-400 hover:text-neutral-200 transition-colors glow-hover pixel-contrast-text cursor-pointer';
+        }
+      });
+
+      Object.entries(tabContents).forEach(([name, el]) => {
+        if (el) {
+          if (name === targetTab) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = tab.getAttribute('data-tab');
+        setActiveTab(target);
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, null, '#' + target);
+        } else {
+          window.location.hash = target;
+        }
+      });
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['espacio', 'proyectos', 'blog'].includes(hash)) {
+        setActiveTab(hash);
+      } else {
+        setActiveTab('espacio');
+      }
+    });
+
+    // Cargar pestaña según hash inicial si existe
+    const initialHash = window.location.hash.replace('#', '');
+    if (['espacio', 'proyectos', 'blog'].includes(initialHash)) {
+      setActiveTab(initialHash);
+    }
   </script>
 </body>
 </html>
